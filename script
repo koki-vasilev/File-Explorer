@@ -1,0 +1,38 @@
+import os
+
+path = "C:/"
+dct = {}
+
+
+def extensions_search(dir, level):
+    files = os.listdir(dir)
+
+    if level == 20:
+        level -= 1
+        return level
+        
+     # if "avast" in new_dir.lower(): # This is optional
+        # print(new_dir)              # It allowes you to search for a certain file
+
+    for file in files:
+        new_dir = dir + "/" + file
+
+        if os.path.isfile(new_dir):
+            key = new_dir.split("/")
+
+            if key[-2] not in dct:
+                dct[key[-2]] = []
+            dct[key[-2]].append(file)
+
+        elif os.path.isdir(new_dir):
+            level += 1
+            try:
+                level = extensions_search(new_dir, level)
+            except PermissionError:
+                pass
+        else:
+            return level - 1
+    return level - 1
+
+
+extensions_search(path, 0)
